@@ -1,3 +1,4 @@
+ HEAD
 # Personal Finance and Expense Tracker
 
 ## About the Project
@@ -118,3 +119,7 @@ Example:
 ## Author
 Arathi Munigala
 
+=======
+# Personal-Finance-Expense-Tracker
+A web-based personal finance and expense tracking application built using Python and Django.
+b08ef128914ba9691c5b0112883c6dcb3e701c51
