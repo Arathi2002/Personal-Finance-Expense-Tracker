@@ -1,0 +1,88 @@
+<!-- expenses/templates/expenses/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Expense Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px auto; max-width: 900px; line-height: 1.6; }
+        .summary-cards { display: flex; gap: 15px; margin-bottom: 25px; }
+        .card { flex: 1; padding: 15px; border-radius: 6px; border: 1px solid #ddd; background: #fafafa; }
+        .card h3 { margin: 0 0 10px 0; font-size: 14px; color: #555; }
+        .card p { margin: 0; font-size: 20px; font-weight: bold; }
+        .income { color: #2e7d32; }
+        .expense { color: #c62828; }
+        form { background: #f4f4f4; padding: 15px; border-radius: 6px; margin-bottom: 30px; }
+        form p { margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table, th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #eee; }
+        button { cursor: pointer; padding: 6px 12px; }
+    </style>
+</head>
+<body>
+
+    <h2>Personal Finance & Expense Tracker</h2>
+
+    <!-- Summary Section -->
+    <div class="summary-cards">
+        <div class="card">
+            <h3>Total Income</h3>
+            <p class="income">₹{{ total_income }}</p>
+        </div>
+        <div class="card">
+            <h3>Total Expense</h3>
+            <p class="expense">₹{{ total_expense }}</p>
+        </div>
+        <div class="card">
+            <h3>Net Balance</h3>
+            <p>₹{{ net_balance }}</p>
+        </div>
+    </div>
+
+    <!-- Entry Form -->
+    <form method="POST">
+        {% csrf_token %}
+        <h3>Add New Transaction</h3>
+        {{ form.as_p }}
+        <button type="submit">Add Record</button>
+    </form>
+
+    <!-- History Table -->
+    <h3>Transaction History</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in transactions %}
+            <tr>
+                <td>{{ item.date }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.get_category_display }}</td>
+                <td>{{ item.get_transaction_type_display }}</td>
+                <td>₹{{ item.amount }}</td>
+                <td>
+                    <form method="POST" action="{% url 'delete_transaction' item.pk %}" style="display:inline; background:none; padding:0; margin:0;">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Delete this record?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No transactions added yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
